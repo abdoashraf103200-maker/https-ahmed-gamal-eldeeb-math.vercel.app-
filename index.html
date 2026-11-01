@@ -14,10 +14,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#1e3a8a',
-                        secondary: '#d97706',
-                    },
+                    colors: { primary: '#1e3a8a', secondary: '#d97706' },
                     fontFamily: { sans: ['Tajawal', 'sans-serif'] }
                 }
             }
@@ -57,7 +54,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button type="button" onclick="logoutStudent()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2 rounded-lg text-xs font-bold border border-slate-700 transition cursor-pointer" title="إظهار بوابة دخول الطلاب مجدداً">
+                <button type="button" onclick="logoutStudent()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2 rounded-lg text-xs font-bold border border-slate-700 transition cursor-pointer">
                     <i class="fa-solid fa-rotate-right"></i> إعادة إظهار البوابة
                 </button>
                 <button type="button" onclick="openPasswordModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow transition cursor-pointer">
@@ -88,10 +85,8 @@
     <!-- Main Content -->
     <main class="flex-grow container mx-auto px-4 py-8">
         
-        <!-- Teacher Dashboard & Student Roster -->
+        <!-- Teacher Dashboard -->
         <div id="teacherDashboard" class="hidden space-y-8 mb-12">
-            
-            <!-- Statistics Card -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
                     <div>
@@ -104,7 +99,6 @@
                 </div>
             </div>
 
-            <!-- Registered Students Table -->
             <div class="bg-white rounded-2xl p-6 shadow-xl border border-amber-200">
                 <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-4">
                     <h3 class="text-xl font-bold text-primary flex items-center gap-2">
@@ -134,27 +128,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Add Lecture Form -->
-            <div class="bg-white rounded-2xl p-6 shadow-xl border border-amber-200">
-                <h3 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-screwdriver-wrench text-amber-600"></i> إضافة مذكرة جديدة
-                </h3>
-                <form id="addLectureForm" onsubmit="addLecture(event)" class="space-y-3 bg-slate-50 p-5 rounded-xl border">
-                    <input type="text" id="lecTitle" placeholder="عنوان المذكرة (مثلاً: اختبار شامل مقرر أكتوبر - أولى ثانوي)" required class="w-full p-2.5 text-sm border rounded-lg outline-none">
-                    <select id="lecGrade" class="w-full p-2.5 text-sm border rounded-lg outline-none">
-                        <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                        <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                        <option value="الصف الثالث الثانوي علمي">الصف الثالث الثانوي (علمي)</option>
-                        <option value="الصف الثالث الثانوي أدبي">الصف الثالث الثانوي (أدبي)</option>
-                        <option value="الصف الأول الإعدادي">الصف الأول الإعدادي</option>
-                        <option value="الصف الثاني الإعدادي">الصف الثاني الإعدادي</option>
-                        <option value="الصف الثالث الإعدادي">الصف الثالث الإعدادي</option>
-                    </select>
-                    <input type="url" id="lecUrl" placeholder="رابط التحميل" required class="w-full p-2.5 text-sm border rounded-lg outline-none">
-                    <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white font-bold py-2 rounded-lg text-sm transition cursor-pointer">نشر المذكرة للطلاب</button>
-                </form>
-            </div>
         </div>
 
         <!-- Lectures Section -->
@@ -170,17 +143,12 @@
                         <option value="الصف الأول الثانوي" selected>الصف الأول الثانوي</option>
                         <option value="الصف الثاني الثانوي">ثانية ثانوي</option>
                         <option value="الصف الثالث الثانوي علمي">ثالثة ثانوي (علمي)</option>
-                        <option value="الصف الثالث الثانوي أدبي">ثالثة ثانوي (أدبي)</option>
                         <option value="الصف الأول الإعدادي">أولى إعدادي</option>
-                        <option value="الصف الثاني الإعدادي">ثانية إعدادي</option>
-                        <option value="الصف الثالث الإعدادي">ثالثة إعدادي</option>
                     </select>
                 </div>
             </div>
-
             <div id="lecturesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
-
     </main>
 
     <!-- Footer -->
@@ -194,20 +162,21 @@
         const MASTER_USERNAME = "eldeeb"; 
         const MASTER_PASSWORD = "911200";
 
-        // فحص حالة الدخول عند تحميل الصفحة مباشرة
+        if (!localStorage.getItem('eldeeb_lectures')) {
+            const defaultLectures = [
+                { id: 1, title: 'اختبار شامل مقرر أكتوبر - الصف الأول الثانوي', grade: 'الصف الأول الثانوي', url: 'https://drive.google.com/file/d/1ofsVOvUYXxZQll-g3ElWE6RMYzIIARj9/view?usp=drivesdk' }
+            ];
+            localStorage.setItem('eldeeb_lectures', JSON.stringify(defaultLectures));
+        }
+
         (function checkAndInit() {
             const isStudentLoggedIn = localStorage.getItem('eldeeb_student_logged');
             const gate = document.getElementById('studentAuthGate');
-            if (!isStudentLoggedIn && gate) {
-                gate.style.display = 'flex'; 
-            } else if (gate) {
-                gate.style.display = 'none';
-            }
+            if (!isStudentLoggedIn && gate) gate.style.display = 'flex'; 
+            else if (gate) gate.style.display = 'none';
         })();
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderLectures();
-        });
+        window.addEventListener('DOMContentLoaded', () => { renderLectures(); });
 
         function logoutStudent() {
             localStorage.removeItem('eldeeb_student_logged');
@@ -215,40 +184,19 @@
         }
 
         function verifyAndRegisterStudent() {
-            const nameInput = document.getElementById('studentNameInput');
-            const phoneInput = document.getElementById('studentPhoneInput');
-            const passInput = document.getElementById('studentPassInput');
+            const name = document.getElementById('studentNameInput').value.trim();
+            const phone = document.getElementById('studentPhoneInput').value.trim();
+            const pass = document.getElementById('studentPassInput').value.trim();
 
-            if (!nameInput || !phoneInput || !passInput) return;
-
-            const name = nameInput.value.trim();
-            const phone = phoneInput.value.trim();
-            const pass = passInput.value.trim();
-
-            if (!name || !phone) {
-                alert("برجاء كتابة الاسم ورقم الهاتف أولاً.");
-                return;
-            }
-
-            if (pass !== STUDENT_PASSWORD) {
-                alert("كلمة المرور غير صحيحة!");
-                passInput.value = '';
-                return;
-            }
+            if (!name || !phone) { alert("برجاء كتابة الاسم ورقم الهاتف أولاً."); return; }
+            if (pass !== STUDENT_PASSWORD) { alert("كلمة المرور غير صحيحة!"); return; }
 
             let students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
-            const newStudent = {
-                id: Date.now(),
-                name: name,
-                phone: phone,
-                date: new Date().toLocaleString('ar-EG')
-            };
-            students.push(newStudent);
+            students.push({ id: Date.now(), name, phone, date: new Date().toLocaleString('ar-EG') });
             localStorage.setItem('eldeeb_students', JSON.stringify(students));
             localStorage.setItem('eldeeb_student_logged', 'true');
 
-            const gate = document.getElementById('studentAuthGate');
-            if (gate) gate.style.display = 'none';
+            document.getElementById('studentAuthGate').style.display = 'none';
             renderLectures();
         }
 
@@ -256,7 +204,6 @@
             const rosterTable = document.getElementById('studentRosterTable');
             const countBadge = document.getElementById('studentCountBadge');
             const students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
-
             if (countBadge) countBadge.innerText = students.length;
             if (!rosterTable) return;
 
@@ -269,7 +216,6 @@
             students.slice().reverse().forEach((st, idx) => {
                 let cleanPhone = st.phone.replace(/\D/g, '');
                 if (cleanPhone.startsWith('0')) cleanPhone = '2' + cleanPhone;
-
                 rosterTable.innerHTML += `
                     <tr class="hover:bg-slate-50">
                         <td class="p-3 font-bold text-slate-400">${students.length - idx}</td>
@@ -277,35 +223,25 @@
                         <td class="p-3 text-slate-600 font-mono">${st.phone}</td>
                         <td class="p-3 text-xs text-slate-400">${st.date}</td>
                         <td class="p-3 text-center">
-                            <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('أهلاً بك يا ' + st.name + ' على منصة المستر أحمد جمال الديب للرياضيات')}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs inline-flex items-center gap-1 transition">
+                            <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('أهلاً بك يا ' + st.name + ' على منصة المستر أحمد جمال الديب')}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs inline-flex items-center gap-1">
                                 <i class="fa-brands fa-whatsapp text-sm"></i> مراسلة
                             </a>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         }
 
         function exportStudentsToExcel() {
             const students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
-            if (students.length === 0) {
-                alert("لا توجد بيانات طلاب للتصدير حالياً.");
-                return;
-            }
-
+            if (students.length === 0) { alert("لا توجد بيانات طلاب للتصدير حالياً."); return; }
             let csvContent = "\uFEFF" + "مسلسل,اسم الطالب,رقم الهاتف,تاريخ الدخول\n";
-            students.forEach((st, index) => {
-                csvContent += `${index + 1},"${st.name}","${st.phone}","${st.date}"\n`;
-            });
-
+            students.forEach((st, index) => { csvContent += `${index + 1},"${st.name}","${st.phone}","${st.date}"\n`; });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `كشف_طلاب_منصة_الديب_${new Date().toLocaleDateString('ar-EG')}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            a.download = `كشف_طلاب_منصة_الديب.csv`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
         }
 
         function clearStudentsRoster() {
@@ -315,71 +251,33 @@
             }
         }
 
-        if (!localStorage.getItem('eldeeb_lectures')) {
-            const defaultLectures = [
-                { id: 1, title: 'اختبار شامل مقرر أكتوبر - الصف الأول الثانوي', grade: 'الصف الأول الثانوي', url: '#' }
-            ];
-            localStorage.setItem('eldeeb_lectures', JSON.stringify(defaultLectures));
-        }
-
-        function openPasswordModal() {
-            const modal = document.getElementById('passwordModal');
-            if (modal) modal.classList.remove('hidden');
-            const userInp = document.getElementById('teacherUsernameInput');
-            const passInp = document.getElementById('teacherPassInput');
-            if (userInp) userInp.value = '';
-            if (passInp) passInp.value = '';
-        }
-
-        function closePasswordModal() {
-            const modal = document.getElementById('passwordModal');
-            if (modal) modal.classList.add('hidden');
-        }
+        function openPasswordModal() { document.getElementById('passwordModal').classList.remove('hidden'); }
+        function closePasswordModal() { document.getElementById('passwordModal').classList.add('hidden'); }
 
         function verifyTeacherCredentials() {
-            const userInp = document.getElementById('teacherUsernameInput');
-            const passInp = document.getElementById('teacherPassInput');
-
-            if (!userInp || !passInp) return;
-
-            let user = userInp.value.trim();
-            let pass = passInp.value.trim();
-
+            let user = document.getElementById('teacherUsernameInput').value.trim();
+            let pass = document.getElementById('teacherPassInput').value.trim();
             if (user === MASTER_USERNAME && pass === MASTER_PASSWORD) {
                 closePasswordModal();
                 localStorage.setItem('eldeeb_student_logged', 'true');
-                
                 const dash = document.getElementById('teacherDashboard');
-                if (dash) {
-                    dash.classList.remove('hidden');
-                    renderStudentRoster();
-                    window.scrollTo({ top: dash.offsetTop - 100, behavior: 'smooth' });
-                }
-            } else {
-                alert("بيانات الدخول غير صحيحة!");
-                userInp.value = '';
-                passInp.value = '';
-            }
+                dash.classList.remove('hidden');
+                renderStudentRoster();
+                window.scrollTo({ top: dash.offsetTop - 100, behavior: 'smooth' });
+            } else { alert("بيانات الدخول غير صحيحة!"); }
         }
 
         function renderLectures() {
             const container = document.getElementById('lecturesContainer');
             if (!container) return;
-            const filterEl = document.getElementById('filterGrade');
-            const filter = filterEl ? filterEl.value : 'all';
+            const filter = document.getElementById('filterGrade').value;
             const lectures = JSON.parse(localStorage.getItem('eldeeb_lectures')) || [];
-            
             container.innerHTML = '';
             const filtered = filter === 'all' ? lectures : lectures.filter(l => l.grade === filter);
 
-            if (filtered.length === 0) {
-                container.innerHTML = '<p class="col-span-3 text-center text-slate-400 py-8 bg-white rounded-2xl border">لا توجد مذكرات متاحة لهذه المرحلة حالياً.</p>';
-                return;
-            }
-
             filtered.forEach(lec => {
                 container.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col justify-between">
                         <div>
                             <span class="text-xs bg-blue-50 text-primary font-bold px-2.5 py-1 rounded-md mb-3 inline-block">${lec.grade}</span>
                             <h4 class="font-bold text-slate-800 text-lg mb-2">${lec.title}</h4>
@@ -388,42 +286,9 @@
                             <a href="${lec.url}" target="_blank" class="bg-primary hover:bg-blue-900 text-white text-xs px-4 py-2.5 rounded-lg font-bold transition flex items-center gap-1.5">
                                 <i class="fa-solid fa-download"></i> تحميل أو عرض المذكرة
                             </a>
-                            <button type="button" onclick="deleteLecture(${lec.id})" class="text-red-400 hover:text-red-600 text-xs p-1 cursor-pointer" title="حذف"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-        }
-
-        function addLecture(e) {
-            e.preventDefault();
-            const titleEl = document.getElementById('lecTitle');
-            const gradeEl = document.getElementById('lecGrade');
-            const urlEl = document.getElementById('lecUrl');
-
-            if (!titleEl || !gradeEl || !urlEl) return;
-
-            const title = titleEl.value.trim();
-            const grade = gradeEl.value;
-            const url = urlEl.value.trim();
-
-            const lectures = JSON.parse(localStorage.getItem('eldeeb_lectures')) || [];
-            lectures.unshift({ id: Date.now(), title, grade, url });
-            localStorage.setItem('eldeeb_lectures', JSON.stringify(lectures));
-
-            const form = document.getElementById('addLectureForm');
-            if (form) form.reset();
-            renderLectures();
-            alert("تم نشر المذكرة بنجاح يا مستر أحمد!");
-        }
-
-        function deleteLecture(id) {
-            if(confirm("هل أنت متأكد من حذف هذه المذكرة؟")) {
-                let lectures = JSON.parse(localStorage.getItem('eldeeb_lectures')) || [];
-                lectures = lectures.filter(l => l.id !== id);
-                localStorage.setItem('eldeeb_lectures', JSON.stringify(lectures));
-                renderLectures();
-            }
         }
     </script>
 </body>
