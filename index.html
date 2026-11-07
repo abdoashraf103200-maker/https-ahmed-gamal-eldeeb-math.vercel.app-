@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار إلكتروني رياضيات - الصف الخامس الابتدائي</title>
+    <title>منصة المستر أحمد جمال الديب - أستاذ الرياضيات</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -24,188 +24,133 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
+    <!-- Student Login Gate -->
+    <div id="studentAuthGate" class="fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md p-6 md:p-8 shadow-2xl text-center border-4 border-amber-500/30">
+            <div class="bg-amber-100 text-amber-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2 class="text-2xl font-black text-primary mb-1">منصة المستر أحمد جمال الديب</h2>
+            <p class="text-xs text-slate-500 mb-6">أدخل بياناتك وكلمة المرور الخاصة لدخول المنصة</p>
+            <div class="space-y-3">
+                <input type="text" id="studentNameInput" placeholder="اسم الطالب الرباعي..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
+                <input type="tel" id="studentPhoneInput" placeholder="رقم الهاتف (واتساب)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
+                <input type="password" id="studentPassInput" placeholder="كلمة المرور السرية (2026)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center tracking-widest font-bold">
+                <button type="button" onclick="verifyAndRegisterStudent()" class="w-full bg-secondary hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg cursor-pointer mt-2">تسجيل الدخول للمنصة</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3 space-x-reverse">
                 <div class="bg-secondary text-white p-3 rounded-xl">
-                    <i class="fa-solid fa-laptop-code text-2xl"></i>
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
                 </div>
                 <div>
                     <h1 class="text-xl font-black">منصة المستر أحمد جمال الديب</h1>
-                    <p class="text-xs text-amber-400">اختبار إلكتروني - الصف الخامس الابتدائي (الوحدة 1 و 2)</p>
+                    <p class="text-xs text-amber-400">أستاذ الرياضيات</p>
                 </div>
             </div>
-            <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-4 py-2 rounded-lg text-xs font-bold border border-slate-700 transition">
-                <i class="fa-solid fa-house"></i> العودة للمنصة
-            </a>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="logoutStudent()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2 rounded-lg text-xs font-bold border border-slate-700 transition cursor-pointer">
+                    <i class="fa-solid fa-rotate-right"></i> تسجيل خروج
+                </button>
+                <button type="button" onclick="openPasswordModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow transition cursor-pointer">
+                    <i class="fa-solid fa-lock"></i> لوحة تحكم المستر
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Quiz Container -->
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-3xl">
-        <!-- Start Screen -->
-        <div id="quiz-intro" class="bg-white p-8 rounded-3xl shadow-xl border border-amber-200 text-center space-y-6">
-            <div class="bg-amber-100 text-amber-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
-                <i class="fa-solid fa-file-pen"></i>
+    <!-- Teacher Special Login Modal -->
+    <div id="passwordModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl relative">
+            <button type="button" onclick="closePasswordModal()" class="absolute left-4 top-4 text-slate-400 hover:text-red-500 text-xl font-bold cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-4">
+                <div class="bg-amber-100 text-amber-700 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 class="text-lg font-bold text-primary">تسجيل دخول المستر (خاص)</h3>
             </div>
-            <h2 class="text-3xl font-black text-primary">اختبار مادة الرياضيات - الصف الخامس الابتدائي</h2>
-            <p class="text-slate-600 text-sm leading-relaxed">
-                هذا الاختبار يغطي **الوحدة الأولى والثانية** بالكامل (الترم الأول)، ومكون من **25 سؤالاً** اختيار من متعدد. ركز جيداً قبل الإجابة!
-            </p>
-            <div class="space-y-3 max-w-md mx-auto">
-                <input type="text" id="studentName" placeholder="اكتب اسمك الثلاثي هنا..." class="w-full p-4 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
-                <button onclick="startQuiz()" class="w-full bg-secondary hover:bg-amber-600 text-white font-bold py-4 rounded-xl text-base transition shadow-lg cursor-pointer">
-                    ابدأ الاختبار الآن 🚀
+            <div class="space-y-3">
+                <input type="text" id="teacherUsernameInput" placeholder="اسم المستخدم..." class="w-full p-3 text-sm border rounded-xl outline-none text-center font-bold" value="eldeeb">
+                <input type="password" id="teacherPassInput" placeholder="كلمة المرور..." class="w-full p-3 text-sm border rounded-xl outline-none text-center tracking-widest" value="911200">
+                <button type="button" onclick="verifyTeacherCredentials()" class="w-full bg-primary hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">دخول اللوحة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        
+        <!-- Teacher Dashboard -->
+        <div id="teacherDashboard" class="hidden space-y-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold mb-1">إجمالي الطلاب المشتركين</p>
+                        <h4 id="studentCountBadge" class="text-3xl font-black text-primary">0</h4>
+                    </div>
+                    <div class="bg-blue-50 text-primary p-4 rounded-xl text-2xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-xl border border-amber-200">
+                <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-4">
+                    <h3 class="text-xl font-bold text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-address-book text-amber-600"></i> كشف الطلاب المشتركين على المنصة
+                    </h3>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="exportStudentsToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow cursor-pointer">
+                            <i class="fa-solid fa-file-excel"></i> تحميل كشف Excel
+                        </button>
+                        <button type="button" onclick="clearStudentsRoster()" class="text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i> مسح الكشف
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-right">
+                        <thead class="bg-slate-100 text-slate-700 text-xs">
+                            <tr>
+                                <th class="p-3 rounded-r-lg">#</th>
+                                <th class="p-3">اسم الطالب</th>
+                                <th class="p-3">رقم الهاتف</th>
+                                <th class="p-3">تاريخ الدخول</th>
+                                <th class="p-3 rounded-l-lg text-center">مراسلة واتساب</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentRosterTable" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Online Exams -->
+        <section id="onlineExamsSection" class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-2xl font-black text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-laptop-code text-amber-600"></i> الاختيارات والاختبارات الإلكترونية
+                    </h3>
+                    <p class="text-xs text-slate-500">امتحانات أونلاين بتصحيح فوري ودرجات مباشرة</p>
+                </div>
+            </div>
+
+            <div id="quizContainer" class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6 border-4 border-amber-500/20">
+                <div class="space-y-2 text-center md:text-right">
+                    <span class="bg-amber-500 text-slate-900 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">اختبار جديد 🔥</span>
+                    <h4 class="text-2xl font-black">اختبار الصف الخامس الابتدائي (الوحدة 1 و 2)</h4>
+                    <p class="text-xs text-slate-200">25 سؤال اختياري شامل للمفهوم والقواعد مع تصحيح فوري للمستوى.</p>
+                </div>
+                <button onclick="startInteractiveQuiz()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer whitespace-nowrap">
+                    بدء الاختبار الآن 🚀
                 </button>
             </div>
-        </div>
 
-        <!-- Question Box -->
-        <div id="quiz-box" class="hidden bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 space-y-6">
-            <div class="flex justify-between items-center border-b pb-4">
-                <span id="question-counter" class="text-xs font-bold bg-blue-50 text-primary px-3 py-1.5 rounded-lg">السؤال 1 من 25</span>
-                <span class="text-xs text-slate-400 font-bold">مستر أحمد جمال الديب</span>
-            </div>
-            <div id="question-text" class="text-lg font-bold text-slate-800 min-h-[60px]"></div>
-            <div id="options-container" class="space-y-3"></div>
-            <div class="flex justify-between pt-4 border-t">
-                <button id="prev-btn" onclick="prevQuestion()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2.5 rounded-xl text-xs font-bold transition">السابق</button>
-                <button id="next-btn" onclick="nextQuestion()" class="bg-primary hover:bg-blue-900 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition mr-auto">السؤال التالي</button>
-            </div>
-        </div>
-
-        <!-- Result Box -->
-        <div id="result-box" class="hidden bg-white p-8 rounded-3xl shadow-xl border border-emerald-200 text-center space-y-6">
-            <div class="bg-emerald-100 text-emerald-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl">
-                <i class="fa-solid fa-award"></i>
-            </div>
-            <h2 class="text-3xl font-black text-primary">نتيجة الاختبار</h2>
-            <p id="student-congrats" class="text-slate-700 font-bold text-lg"></p>
-            <div class="bg-slate-50 p-6 rounded-2xl border inline-block w-full max-w-xs mx-auto">
-                <p class="text-xs text-slate-500 mb-1">درجتك النهائية</p>
-                <h3 id="final-score" class="text-4xl font-black text-secondary">0 / 25</h3>
-            </div>
-            <div>
-                <button onclick="location.reload()" class="bg-primary hover:bg-blue-900 text-white font-bold py-3 px-8 rounded-xl text-sm transition shadow cursor-pointer">
-                    إعادة الاختبار
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-white py-6 text-center text-xs border-t border-slate-800">
-        <p>جميع الحقوق محفوظة للمستر أحمد جمال الديب © 2026 | تواصل: 01003463252</p>
-    </footer>
-
-    <!-- JavaScript Quiz Logic -->
-    <script>
-        const questions = [
-            // الوحدة الأولى
-            { q: "قيمة الرقم 5 في العدد العشري 3.456 هي:", options: ["0.5", "0.05", "0.005", "5"], answer: 1 },
-            { q: "العدد العشري الأكبر بين الأعداد الآتية هو:", options: ["3.42", "3.402", "3.5", "3.49"], answer: 2 },
-            { q: "تقريب العدد 14.78 إلى أقرب عدد صحيح يساوي:", options: ["14", "15", "14.8", "16"], answer: 1 },
-            { q: "عند ضرب العدد 45.6 في 10، تتحرك العلامة العشرية:", options: ["جهة اليسار خانة", "جهة اليسار خانتين", "جهة اليمين خانة واحدة", "لا تتغير"], answer: 2 },
-            { q: "ناتج قسمة 32.4 ÷ 100 يساوي:", options: ["3.24", "0.324", "324", "0.0324"], answer: 1 },
-            { q: "الصيغة الممتدة للعدد 5.23 هي:", options: ["5 + 0.2 + 0.03", "50 + 2 + 3", "5 + 2 + 3", "0.5 + 0.02"], answer: 0 },
-            { q: "أي من الأعداد الآتية يمثل تقريباً للعدد 8.349 إلى أقرب جزء من مئة؟", options: ["8.35", "8.34", "8.4", "8.3"], answer: 0 },
-            { q: "العدد سبعة أجزاء من ألف يكتب بالصيغة القياسية:", options: ["0.7", "0.07", "0.007", "7.000"], answer: 2 },
-            { q: "تقريب العدد 6.87 إلى أقرب جزء من عشرة هو:", options: ["6.8", "6.9", "7.0", "6.7"], answer: 1 },
-            { q: "ناتج جمع 3.4 + 2.15 يساوي:", options: ["5.55", "5.19", "3.65", "6.15"], answer: 0 },
-            { q: "ناتج طرح 7.8 - 4.23 يساوي:", options: ["3.63", "3.57", "3.47", "3.5"], answer: 1 },
-            { q: "العنصر المحايد الجمعي في الأعداد العشرية هو:", options: ["1", "0", "10", "لا يوجد"], answer: 1 },
-
-            // الوحدة الثانية
-            { q: "في التعبير الرياضي x + 5، الرمز x يسمى:", options: ["ثابتاً", "متغيراً", "معاملاً", "تعبيراً عددياً"], answer: 1 },
-            { q: "أي مما يأتي يمثل تعبيراً رياضياً؟", options: ["5 + 3 = 8", "x + 7", "12 - 4 = 8", "15 > 10"], answer: 1 },
-            { q: "معادلة رياضية تتضمن متغيراً من بين الآتي:", options: ["7 + 5", "12 + 3 = 15", "y - 4 = 10", "9 × 2"], answer: 2 },
-            { q: "قيمة المتغير b في المعادلة: b - 3 = 7 هي:", options: ["4", "10", "21", "3"], answer: 1 },
-            { q: "قيمة المتغير a في المعادلة: 4 + a = 11 هي:", options: ["15", "7", "44", "3"], answer: 1 },
-            { q: "إذا كان سعر القلم x جنيهاً، فإن ثمن 5 أقلام يعبر عنه بـ:", options: ["x + 5", "5 - x", "5x", "x ÷ 5"], answer: 2 },
-            { q: "التعبير العددي الذي يعبر عن 'أضف 4 إلى العدد 6 ثم اضرب الناتج في 2':", options: ["(6 + 4) × 2", "6 + 4 × 2", "2 × 6 + 4", "6 + (4 × 2)"], answer: 0 },
-            { q: "حل المعادلة 2x = 10 هو:", options: ["x = 5", "x = 8", "x = 20", "x = 2"], answer: 0 },
-            { q: "أيها يمثل معادلة؟", options: ["3x + 2", "x + 5 = 12", "15 - 4", "7 × 8"], answer: 1 },
-            { q: "قيمة m في المعادلة: 15 - m = 9 هي:", options: ["6", "24", "5", "4"], answer: 0 },
-            { q: "إذا كان عمر أحمد y سنة، وعمر أخيه أكبر منه بـ 4 سنوات، فإن عمر الأخ هو:", options: ["4y", "y - 4", "y + 4", "4 - y"], answer: 2 },
-            { q: "ناتج التعبير العددي حسب ترتيب العمليات: 20 - 4 × 3 يساوي:", options: ["48", "8", "32", "12"], answer: 1 },
-            { q: "أي من المعادلات الآتية يكون حلها x = 6 ؟", options: ["x + 2 = 10", "x - 3 = 3", "2x = 8", "12 - x = 4"], answer: 1 }
-        ];
-
-        let currentIdx = 0;
-        let score = 0;
-        let userAnswers = new Array(questions.length).fill(null);
-        let studentFullName = "";
-
-        function startQuiz() {
-            const nameInput = document.getElementById('studentName').value.trim();
-            if (!nameInput) {
-                alert("برجاء إدخال اسمك الثلاثي قبل بدء الاختبار.");
-                return;
-            }
-            studentFullName = nameInput;
-            document.getElementById('quiz-intro').classList.add('hidden');
-            document.getElementById('quiz-box').classList.remove('hidden');
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const q = questions[currentIdx];
-            document.getElementById('question-counter').innerText = `السؤال ${currentIdx + 1} من ${questions.length}`;
-            document.getElementById('question-text').innerText = `${currentIdx + 1}. ${q.q}`;
-            
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-                const isSelected = userAnswers[currentIdx] === idx;
-                optionsContainer.innerHTML += `
-                    <button onclick="selectOption(${idx})" class="w-full text-right p-4 rounded-xl border-2 transition font-bold text-sm cursor-pointer ${isSelected ? 'border-amber-500 bg-amber-50 text-amber-900 shadow-sm' : 'border-slate-200 hover:border-blue-400 bg-white text-slate-700'}">
-                        <span class="inline-block w-6 h-6 rounded-full bg-slate-100 text-center text-xs leading-6 ml-2 font-mono">${['أ', 'ب', 'ج', 'د'][idx]}</span>
-                        ${opt}
-                    </button>`;
-            });
-
-            document.getElementById('prev-btn').style.display = currentIdx === 0 ? 'none' : 'block';
-            document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? 'إنهاء وتسليم الاختبار 🏁' : 'السؤال التالي';
-        }
-
-        function selectOption(optIdx) {
-            userAnswers[currentIdx] = optIdx;
-            loadQuestion();
-        }
-
-        function nextQuestion() {
-            if (userAnswers[currentIdx] === null) {
-                alert("برجاء اختيار إجابة قبل الانتقال للسؤال التالي.");
-                return;
-            }
-            if (currentIdx < questions.length - 1) {
-                currentIdx++;
-                loadQuestion();
-            } else {
-                finishQuiz();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentIdx > 0) {
-                currentIdx--;
-                loadQuestion();
-            }
-        }
-
-        function finishQuiz() {
-            score = 0;
-            userAnswers.forEach((ans, idx) => {
-                if (ans === questions[idx].answer) score++;
-            });
-
-            document.getElementById('quiz-box').classList.add('hidden');
-            document.getElementById('result-box').classList.remove('hidden');
-            document.getElementById('student-congrats').innerText = `بطلنا المتميز / ${studentFullName}، لقد أتممت اختبار الوحدة الأولى والثانية بنجاح!`;
-            document.getElementById('final-score').innerText = `${score} / 25`;
-        }
-    </script>
-</body>
-</html>
+            <!-- Quiz Display Modal Area -->
+            <div id="quizModal" class
