@@ -35,6 +35,7 @@
             <div class="space-y-3">
                 <input type="text" id="studentNameInput" placeholder="اسم الطالب الرباعي..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
                 <input type="tel" id="studentPhoneInput" placeholder="رقم الهاتف (واتساب)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
+                <!-- تم ضبط نوع الحقل ليكون password لتظهر الكلمة على هيئة نقاط سرية -->
                 <input type="password" id="studentPassInput" placeholder="كلمة المرور السرية (2026)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center tracking-widest font-bold">
                 <button type="button" onclick="verifyAndRegisterStudent()" class="w-full bg-secondary hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg cursor-pointer mt-2">تسجيل الدخول للمنصة</button>
             </div>
@@ -77,80 +78,4 @@
             <div class="space-y-3">
                 <input type="text" id="teacherUsernameInput" placeholder="اسم المستخدم..." class="w-full p-3 text-sm border rounded-xl outline-none text-center font-bold" value="eldeeb">
                 <input type="password" id="teacherPassInput" placeholder="كلمة المرور..." class="w-full p-3 text-sm border rounded-xl outline-none text-center tracking-widest" value="911200">
-                <button type="button" onclick="verifyTeacherCredentials()" class="w-full bg-primary hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">دخول اللوحة</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-8">
-        
-        <!-- Teacher Dashboard -->
-        <div id="teacherDashboard" class="hidden space-y-8 mb-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-slate-500 font-bold mb-1">إجمالي الطلاب المشتركين</p>
-                        <h4 id="studentCountBadge" class="text-3xl font-black text-primary">0</h4>
-                    </div>
-                    <div class="bg-blue-50 text-primary p-4 rounded-xl text-2xl">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-6 shadow-xl border border-amber-200">
-                <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-4">
-                    <h3 class="text-xl font-bold text-primary flex items-center gap-2">
-                        <i class="fa-solid fa-address-book text-amber-600"></i> كشف الطلاب المشتركين على المنصة
-                    </h3>
-                    <div class="flex items-center gap-3">
-                        <button type="button" onclick="exportStudentsToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow cursor-pointer">
-                            <i class="fa-solid fa-file-excel"></i> تحميل كشف Excel
-                        </button>
-                        <button type="button" onclick="clearStudentsRoster()" class="text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1 cursor-pointer">
-                            <i class="fa-solid fa-trash-can"></i> مسح الكشف
-                        </button>
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-right">
-                        <thead class="bg-slate-100 text-slate-700 text-xs">
-                            <tr>
-                                <th class="p-3 rounded-r-lg">#</th>
-                                <th class="p-3">اسم الطالب</th>
-                                <th class="p-3">رقم الهاتف</th>
-                                <th class="p-3">تاريخ الدخول</th>
-                                <th class="p-3 rounded-l-lg text-center">مراسلة واتساب</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentRosterTable" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 1: Online Exams -->
-        <section id="onlineExamsSection" class="mb-12">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h3 class="text-2xl font-black text-primary flex items-center gap-2">
-                        <i class="fa-solid fa-laptop-code text-amber-600"></i> الاختيارات والاختبارات الإلكترونية
-                    </h3>
-                    <p class="text-xs text-slate-500">امتحانات أونلاين بتصحيح فوري ودرجات مباشرة</p>
-                </div>
-            </div>
-
-            <div id="quizContainer" class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6 border-4 border-amber-500/20">
-                <div class="space-y-2 text-center md:text-right">
-                    <span class="bg-amber-500 text-slate-900 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">اختبار جديد 🔥</span>
-                    <h4 class="text-2xl font-black">اختبار الصف الخامس الابتدائي (الوحدة 1 و 2)</h4>
-                    <p class="text-xs text-slate-200">25 سؤال اختياري شامل للمفهوم والقواعد مع تصحيح فوري للمستوى.</p>
-                </div>
-                <button onclick="startInteractiveQuiz()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer whitespace-nowrap">
-                    بدء الاختبار الآن 🚀
-                </button>
-            </div>
-
-            <!-- Quiz Display Modal Area -->
-            <div id="quizModal" class
+                <button type="button" onclick="verifyTeacherCredentials()"
