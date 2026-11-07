@@ -35,7 +35,6 @@
             <div class="space-y-3">
                 <input type="text" id="studentNameInput" placeholder="اسم الطالب الرباعي..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
                 <input type="tel" id="studentPhoneInput" placeholder="رقم الهاتف (واتساب)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
-                <!-- حقل كلمة المرور مخفي بالنقاط السرية -->
                 <input type="password" id="studentPassInput" placeholder="كلمة المرور السرية (2026)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center tracking-widest font-bold">
                 <button type="button" onclick="verifyAndRegisterStudent()" class="w-full bg-secondary hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg cursor-pointer mt-2">تسجيل الدخول للمنصة</button>
             </div>
@@ -77,4 +76,226 @@
             </div>
             <div class="space-y-3">
                 <input type="text" id="teacherUsernameInput" placeholder="اسم المستخدم..." class="w-full p-3 text-sm border rounded-xl outline-none text-center font-bold" value="eldeeb">
-                <input type="password" id="teacherPassInput" placeholder="كلمة المرور..." class
+                <input type="password" id="teacherPassInput" placeholder="كلمة المرور..." class="w-full p-3 text-sm border rounded-xl outline-none text-center tracking-widest" value="911200">
+                <button type="button" onclick="verifyTeacherCredentials()" class="w-full bg-primary hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">دخول اللوحة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        
+        <!-- Teacher Dashboard -->
+        <div id="teacherDashboard" class="hidden space-y-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold mb-1">إجمالي الطلاب المشتركين</p>
+                        <h4 id="studentCountBadge" class="text-3xl font-black text-primary">0</h4>
+                    </div>
+                    <div class="bg-blue-50 text-primary p-4 rounded-xl text-2xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-xl border border-amber-200">
+                <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-4">
+                    <h3 class="text-xl font-bold text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-address-book text-amber-600"></i> كشف الطلاب المشتركين على المنصة
+                    </h3>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="exportStudentsToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow cursor-pointer">
+                            <i class="fa-solid fa-file-excel"></i> تحميل كشف Excel
+                        </button>
+                        <button type="button" onclick="clearStudentsRoster()" class="text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i> مسح الكشف
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-right">
+                        <thead class="bg-slate-100 text-slate-700 text-xs">
+                            <tr>
+                                <th class="p-3 rounded-r-lg">#</th>
+                                <th class="p-3">اسم الطالب</th>
+                                <th class="p-3">رقم الهاتف</th>
+                                <th class="p-3">تاريخ الدخول</th>
+                                <th class="p-3 rounded-l-lg text-center">مراسلة واتساب</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentRosterTable" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lectures Section -->
+        <section id="lectures" class="mb-14">
+            <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                <div>
+                    <h3 class="text-2xl font-black text-primary">المذكرات والمراجعات</h3>
+                    <p class="text-xs text-slate-500">تحميل مباشر لأحدث ملازم وملخصات الرياضيات</p>
+                </div>
+                <div>
+                    <select id="filterGrade" onchange="renderLectures()" class="text-xs border p-2.5 rounded-lg bg-white shadow-sm outline-none font-bold text-primary">
+                        <option value="all" selected>عرض كل المذكرات والمراحل</option>
+                        <option value="الصف الثالث الابتدائي">الصف الثالث الابتدائي</option>
+                        <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                        <option value="الصف الثاني الثانوي">ثانية ثانوي</option>
+                        <option value="الصف الثالث الثانوي علمي">ثالثة ثانوي (علمي)</option>
+                        <option value="الصف الأول الإعدادي">أولى إعدادي</option>
+                    </select>
+                </div>
+            </div>
+            <div id="lecturesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-6 text-center text-xs border-t border-slate-800">
+        <p>جميع الحقوق محفوظة للمستر أحمد جمال الديب © 2026 | تواصل: 01003463252</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const STUDENT_PASSWORD = "2026";
+        const MASTER_USERNAME = "eldeeb"; 
+        const MASTER_PASSWORD = "911200";
+
+        // قائمة المذكرات شاملة الملف الجديد
+        const defaultLectures = [
+            { id: 1, title: 'امتحان شامل رياضيات - الصف الثالث الابتدائي', grade: 'الصف الثالث الابتدائي', url: 'https://drive.google.com/file/d/1kb9JkqjKsZ_Rq2erDAtg0SLDGYTPI2r6/view?usp=drivesdk' },
+            { id: 2, title: 'اختبار شامل مقرر أكتوبر - الصف الأول الثانوي', grade: 'الصف الأول الثانوي', url: 'https://drive.google.com/file/d/1ofsVOvUYXxZQll-g3ElWE6RMYzIIARj9/view?usp=drivesdk' }
+        ];
+        localStorage.setItem('eldeeb_lectures', JSON.stringify(defaultLectures));
+
+        (function checkAndInit() {
+            const isStudentLoggedIn = localStorage.getItem('eldeeb_student_logged');
+            const gate = document.getElementById('studentAuthGate');
+            if (!isStudentLoggedIn && gate) gate.style.display = 'flex'; 
+            else if (gate) gate.style.display = 'none';
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => { renderLectures(); });
+
+        function logoutStudent() {
+            localStorage.removeItem('eldeeb_student_logged');
+            location.reload();
+        }
+
+        function verifyAndRegisterStudent() {
+            const name = document.getElementById('studentNameInput').value.trim();
+            const phone = document.getElementById('studentPhoneInput').value.trim();
+            const pass = document.getElementById('studentPassInput').value.trim();
+
+            if (!name || !phone) { alert("برجاء كتابة الاسم ورقم الهاتف أولاً."); return; }
+            if (pass !== STUDENT_PASSWORD) { alert("كلمة المرور غير صحيحة! الباسورد هو 2026"); return; }
+
+            let students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
+            students.push({ id: Date.now(), name, phone, date: new Date().toLocaleString('ar-EG') });
+            localStorage.setItem('eldeeb_students', JSON.stringify(students));
+            localStorage.setItem('eldeeb_student_logged', 'true');
+
+            document.getElementById('studentAuthGate').style.display = 'none';
+            renderLectures();
+        }
+
+        function renderStudentRoster() {
+            const rosterTable = document.getElementById('studentRosterTable');
+            const countBadge = document.getElementById('studentCountBadge');
+            const students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
+            if (countBadge) countBadge.innerText = students.length;
+            if (!rosterTable) return;
+
+            rosterTable.innerHTML = '';
+            if (students.length === 0) {
+                rosterTable.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-400">لا يوجد طلاب مسجلون حتى الآن.</td></tr>';
+                return;
+            }
+
+            students.slice().reverse().forEach((st, idx) => {
+                let cleanPhone = st.phone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) cleanPhone = '2' + cleanPhone;
+                rosterTable.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-slate-400">${students.length - idx}</td>
+                        <td class="p-3 font-bold text-slate-800">${st.name}</td>
+                        <td class="p-3 text-slate-600 font-mono">${st.phone}</td>
+                        <td class="p-3 text-xs text-slate-400">${st.date}</td>
+                        <td class="p-3 text-center">
+                            <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('أهلاً بك يا ' + st.name + ' على منصة المستر أحمد جمال الديب')}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs inline-flex items-center gap-1">
+                                <i class="fa-brands fa-whatsapp text-sm"></i> مراسلة
+                            </a>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function exportStudentsToExcel() {
+            const students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
+            if (students.length === 0) { alert("لا توجد بيانات طلاب للتصدير حالياً."); return; }
+            let csvContent = "\uFEFF" + "مسلسل,اسم الطالب,رقم الهاتف,تاريخ الدخول\n";
+            students.forEach((st, index) => { csvContent += `${index + 1},"${st.name}","${st.phone}","${st.date}"\n`; });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `كشف_طلاب_منصة_الديب.csv`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        }
+
+        function clearStudentsRoster() {
+            if (confirm("هل أنت متأكد من مسح كشف الطلاب؟")) {
+                localStorage.removeItem('eldeeb_students');
+                renderStudentRoster();
+            }
+        }
+
+        function openPasswordModal() { document.getElementById('passwordModal').classList.remove('hidden'); }
+        function closePasswordModal() { document.getElementById('passwordModal').classList.add('hidden'); }
+
+        function verifyTeacherCredentials() {
+            let user = document.getElementById('teacherUsernameInput').value.trim();
+            let pass = document.getElementById('teacherPassInput').value.trim();
+            if (user === MASTER_USERNAME && pass === MASTER_PASSWORD) {
+                closePasswordModal();
+                localStorage.setItem('eldeeb_student_logged', 'true');
+                const dash = document.getElementById('teacherDashboard');
+                dash.classList.remove('hidden');
+                renderStudentRoster();
+                window.scrollTo({ top: dash.offsetTop - 100, behavior: 'smooth' });
+            } else { alert("بيانات الدخول غير صحيحة!"); }
+        }
+
+        function renderLectures() {
+            const container = document.getElementById('lecturesContainer');
+            if (!container) return;
+            const filter = document.getElementById('filterGrade').value;
+            const lectures = JSON.parse(localStorage.getItem('eldeeb_lectures')) || [];
+            container.innerHTML = '';
+            const filtered = filter === 'all' ? lectures : lectures.filter(l => l.grade === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-8 text-slate-400 font-bold bg-white rounded-2xl border">لا توجد مذكرات متاحة لهذه المرحلة حالياً.</div>';
+                return;
+            }
+
+            filtered.forEach(lec => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs bg-blue-50 text-primary font-bold px-2.5 py-1 rounded-md mb-3 inline-block">${lec.grade}</span>
+                            <h4 class="font-bold text-slate-800 text-lg mb-2">${lec.title}</h4>
+                        </div>
+                        <div class="pt-4 border-t flex justify-between items-center mt-4">
+                            <a href="${lec.url}" target="_blank" class="bg-primary hover:bg-blue-900 text-white text-xs px-4 py-2.5 rounded-lg font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-download"></i> تحميل أو عرض المذكرة
+                            </a>
+                        </div>
+                    </div>`;
+            });
+        }
+    </script>
+</body>
+</html>
