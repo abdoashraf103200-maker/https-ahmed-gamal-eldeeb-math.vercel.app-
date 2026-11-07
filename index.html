@@ -35,7 +35,7 @@
             <div class="space-y-3">
                 <input type="text" id="studentNameInput" placeholder="اسم الطالب الرباعي..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
                 <input type="tel" id="studentPhoneInput" placeholder="رقم الهاتف (واتساب)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center font-bold">
-                <input type="password" id="studentPassInput" placeholder="كلمة المرور السرية (••••)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center tracking-widest font-bold">
+                <input type="password" id="studentPassInput" placeholder="كلمة المرور السرية (2026)..." class="w-full p-3 text-sm border-2 rounded-xl outline-none focus:border-amber-500 text-center tracking-widest font-bold">
                 <button type="button" onclick="verifyAndRegisterStudent()" class="w-full bg-secondary hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg cursor-pointer mt-2">تسجيل الدخول للمنصة</button>
             </div>
         </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" onclick="logoutStudent()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2 rounded-lg text-xs font-bold border border-slate-700 transition cursor-pointer">
-                    <i class="fa-solid fa-rotate-right"></i> إعادة إظهار البوابة
+                    <i class="fa-solid fa-rotate-right"></i> تسجيل خروج
                 </button>
                 <button type="button" onclick="openPasswordModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow transition cursor-pointer">
                     <i class="fa-solid fa-lock"></i> لوحة تحكم المستر
@@ -75,8 +75,8 @@
                 <h3 class="text-lg font-bold text-primary">تسجيل دخول المستر (خاص)</h3>
             </div>
             <div class="space-y-3">
-                <input type="text" id="teacherUsernameInput" placeholder="اسم المستخدم الخاص..." class="w-full p-3 text-sm border rounded-xl outline-none text-center font-bold">
-                <input type="password" id="teacherPassInput" placeholder="كلمة المرور السرية (••••)..." class="w-full p-3 text-sm border rounded-xl outline-none text-center tracking-widest">
+                <input type="text" id="teacherUsernameInput" placeholder="اسم المستخدم..." class="w-full p-3 text-sm border rounded-xl outline-none text-center font-bold" value="eldeeb">
+                <input type="password" id="teacherPassInput" placeholder="كلمة المرور..." class="w-full p-3 text-sm border rounded-xl outline-none text-center tracking-widest" value="911200">
                 <button type="button" onclick="verifyTeacherCredentials()" class="w-full bg-primary hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">دخول اللوحة</button>
             </div>
         </div>
@@ -139,8 +139,9 @@
                 </div>
                 <div>
                     <select id="filterGrade" onchange="renderLectures()" class="text-xs border p-2.5 rounded-lg bg-white shadow-sm outline-none font-bold text-primary">
-                        <option value="all">عرض كل المذكرات والمراحل</option>
-                        <option value="الصف الأول الثانوي" selected>الصف الأول الثانوي</option>
+                        <option value="all" selected>عرض كل المذكرات والمراحل</option>
+                        <option value="الصف الثالث الابتدائي">الصف الثالث الابتدائي</option>
+                        <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
                         <option value="الصف الثاني الثانوي">ثانية ثانوي</option>
                         <option value="الصف الثالث الثانوي علمي">ثالثة ثانوي (علمي)</option>
                         <option value="الصف الأول الإعدادي">أولى إعدادي</option>
@@ -162,12 +163,12 @@
         const MASTER_USERNAME = "eldeeb"; 
         const MASTER_PASSWORD = "911200";
 
-        if (!localStorage.getItem('eldeeb_lectures')) {
-            const defaultLectures = [
-                { id: 1, title: 'اختبار شامل مقرر أكتوبر - الصف الأول الثانوي', grade: 'الصف الأول الثانوي', url: 'https://drive.google.com/file/d/1ofsVOvUYXxZQll-g3ElWE6RMYzIIARj9/view?usp=drivesdk' }
-            ];
-            localStorage.setItem('eldeeb_lectures', JSON.stringify(defaultLectures));
-        }
+        // قائمة المذكرات شاملة الملف الجديد
+        const defaultLectures = [
+            { id: 1, title: 'امتحان شامل رياضيات - الصف الثالث الابتدائي', grade: 'الصف الثالث الابتدائي', url: 'https://drive.google.com/file/d/1kb9JkqjKsZ_Rq2erDAtg0SLDGYTPI2r6/view?usp=drivesdk' },
+            { id: 2, title: 'اختبار شامل مقرر أكتوبر - الصف الأول الثانوي', grade: 'الصف الأول الثانوي', url: 'https://drive.google.com/file/d/1ofsVOvUYXxZQll-g3ElWE6RMYzIIARj9/view?usp=drivesdk' }
+        ];
+        localStorage.setItem('eldeeb_lectures', JSON.stringify(defaultLectures));
 
         (function checkAndInit() {
             const isStudentLoggedIn = localStorage.getItem('eldeeb_student_logged');
@@ -189,7 +190,7 @@
             const pass = document.getElementById('studentPassInput').value.trim();
 
             if (!name || !phone) { alert("برجاء كتابة الاسم ورقم الهاتف أولاً."); return; }
-            if (pass !== STUDENT_PASSWORD) { alert("كلمة المرور غير صحيحة!"); return; }
+            if (pass !== STUDENT_PASSWORD) { alert("كلمة المرور غير صحيحة! الباسورد هو 2026"); return; }
 
             let students = JSON.parse(localStorage.getItem('eldeeb_students')) || [];
             students.push({ id: Date.now(), name, phone, date: new Date().toLocaleString('ar-EG') });
@@ -274,6 +275,11 @@
             const lectures = JSON.parse(localStorage.getItem('eldeeb_lectures')) || [];
             container.innerHTML = '';
             const filtered = filter === 'all' ? lectures : lectures.filter(l => l.grade === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-8 text-slate-400 font-bold bg-white rounded-2xl border">لا توجد مذكرات متاحة لهذه المرحلة حالياً.</div>';
+                return;
+            }
 
             filtered.forEach(lec => {
                 container.innerHTML += `
